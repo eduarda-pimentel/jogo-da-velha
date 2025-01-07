@@ -12,8 +12,7 @@ function App() {
   const [initSelection, setInitSelection] = useState(false);
   const [userIcon, setUserIcon] = useState(null);
   const [computerIcon, setComputerIcon] = useState(null);
-  
-  console.log(userIcon)
+  const iconMatrix = {'user': userIcon, 'computer': computerIcon}
 
   useEffect(()=>{
     if (userIcon !== null){
@@ -31,7 +30,7 @@ function App() {
     <div className="App">
       <Header computerIcon={computerIcon} userIcon={userIcon} initSelection={initSelection}/>
       {!initSelection && <PlayerSelection setUserIcon={setUserIcon}/>}
-      {initSelection && <Tabuleiro/>}
+      {initSelection && <Tabuleiro iconMatrix={iconMatrix}/>}
     </div>
   );
 }
