@@ -1,10 +1,9 @@
 import {useState, useEffect} from 'react'
 
-function Cell({colIndex, rowIndex, nrows, valoresCells, setValoresCells, turno, setTurno, atualizaTabuleiro}) {
+function Cell({colIndex, rowIndex, nrows, valoresCells, turno, setTurno, atualizaTabuleiro, verificaVitoria}) {
     const isEven = ((colIndex+rowIndex)%2==0);
     const backgroundColour = isEven? '#F5F0CD' : '#B1F0F7';
     const [hover, setHover] = useState(false);
-
     const handleMouseEnter = () => {
         if(turno==='user'){
             setHover(true);
@@ -22,10 +21,10 @@ function Cell({colIndex, rowIndex, nrows, valoresCells, setValoresCells, turno, 
         if (turno=='user'){
             if (cellValue===''){
                 atualizaTabuleiro(cellIndex)
-                setTurno('computer')
             } else {
-                alert('célula já preenchida, escolha outra')
+                return;
             }
+            verificaVitoria();
         }
     }
 
@@ -43,7 +42,7 @@ function Cell({colIndex, rowIndex, nrows, valoresCells, setValoresCells, turno, 
     );
 }
 
-function cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatrix, atualizaTabuleiro) {
+function cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatrix, atualizaTabuleiro, verificaVitoria) {
     const nrows = 3;
     const ncols = 3;
 
@@ -55,12 +54,12 @@ function cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatri
                     colIndex={colIndex} 
                     rowIndex={rowIndex} 
                     valoresCells={valoresCells}
-                    setValoresCells={setValoresCells}
                     nrows={nrows}
                     turno={turno}
                     setTurno={setTurno}
                     iconMatrix={iconMatrix}
                     atualizaTabuleiro={atualizaTabuleiro}
+                    verificaVitoria={verificaVitoria}
                 />
             );
         })
@@ -72,21 +71,63 @@ function cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatri
 export function Tabuleiro({iconMatrix}){
 
     const [valoresCells, setValoresCells] = useState(Array(9).fill(''));
-    const [turno, setTurno] = useState('user');
-    
-    
-    
+    const [turno, setTurno] = useState(null);
+    const combosVencedores = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]]
+    const [vencedor, setVencedor] = useState(null);
+
+    const verificaVitoria = () =>{
+        combosVencedores.forEach(combo=>{
+            var comboCompleto = true;
+            combo.forEach((cell )=>{
+                if (valoresCells[cell]===''){
+                    comboCompleto = false;
+                    return;
+                } else if (valoresCells[cell]===iconMatrix[turno]){
+                    return;
+                } else {
+                    comboCompleto = false;
+                    return;
+                }
+            })
+            if (comboCompleto){
+                console.log(turno, 'ganhou com o combo ', combo)
+                setVencedor(turno);
+                return;
+            }
+        })
+    }
+
     const atualizaTabuleiro = (cellInd) =>{
         const valoresCellsUpdate = [...valoresCells];
         valoresCellsUpdate[cellInd] = iconMatrix[turno];
         setValoresCells(valoresCellsUpdate);
     }
 
-    const grid = cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatrix, atualizaTabuleiro);
+    const grid = cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatrix, atualizaTabuleiro, verificaVitoria);
+
+    useEffect(()=>{
+        console.log("tabuleiro mudou");
+        
+        if (turno===null){
+            setTurno('user');
+            return;
+        }
+        
+        verificaVitoria();
+        console.log('vencedor', vencedor);
+        if (vencedor=== null){
+            if(turno==='user'){
+                setTurno('computer')
+            } else {
+                setTurno('user')
+            }
+        }
+    }, [valoresCells])
 
     useEffect(() => {
+        console.log('turno mudou')
         const jogadaDoComputador = setTimeout(async()=> {
-            if (turno === 'computer') {
+            if (turno === 'computer' && vencedor === null) {
                 const indicesSortear = [];
                 valoresCells.forEach((value, index) => {
                     if (value === '') {
@@ -96,10 +137,9 @@ export function Tabuleiro({iconMatrix}){
     
                 const randomCell = indicesSortear[Math.floor(Math.random() * indicesSortear.length)];
                 atualizaTabuleiro(randomCell);
-                setTurno('user'); 
             } 
         }, 2000)
-    }, [turno, valoresCells, atualizaTabuleiro]);
+    }, [turno]); 
 
     return (
         <div className="container" style={{width:'450px', height:'450px'}}>

@@ -10,6 +10,7 @@ import {useState, useEffect } from 'react';
 function App() {
 
   const [initSelection, setInitSelection] = useState(false);
+  const [fimDeJogo, setFimDeJogo] = useState(false);
   const [userIcon, setUserIcon] = useState(null);
   const [computerIcon, setComputerIcon] = useState(null);
   const iconMatrix = {'user': userIcon, 'computer': computerIcon}
