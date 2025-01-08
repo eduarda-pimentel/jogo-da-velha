@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 
-function Cell({colIndex, rowIndex, nrows, valoresCells, turno, setTurno, atualizaTabuleiro, verificaVitoria}) {
+function Cell({colIndex, rowIndex, nrows, valoresCells, turno, vencedor, atualizaTabuleiro, verificaVitoria}) {
     const isEven = ((colIndex+rowIndex)%2==0);
     const backgroundColour = isEven? '#F5F0CD' : '#B1F0F7';
     const [hover, setHover] = useState(false);
@@ -36,13 +36,14 @@ function Cell({colIndex, rowIndex, nrows, valoresCells, turno, setTurno, atualiz
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={(e)=>handleClick(e)}
+            disabled={vencedor!=null}
         >
-            <p className='bg-transparent'>{cellValue}</p>
+            <p className='bg-transparent' style={{color:'black'}}>{cellValue}</p>
         </button>
     );
 }
 
-function cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatrix, atualizaTabuleiro, verificaVitoria) {
+function cellGenerator(valoresCells, turno, iconMatrix, atualizaTabuleiro, verificaVitoria, vencedor) {
     const nrows = 3;
     const ncols = 3;
 
@@ -56,10 +57,10 @@ function cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatri
                     valoresCells={valoresCells}
                     nrows={nrows}
                     turno={turno}
-                    setTurno={setTurno}
                     iconMatrix={iconMatrix}
                     atualizaTabuleiro={atualizaTabuleiro}
                     verificaVitoria={verificaVitoria}
+                    vencedor={vencedor}
                 />
             );
         })
@@ -68,12 +69,11 @@ function cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatri
     return grid;
 }
 
-export function Tabuleiro({iconMatrix}){
+export function Tabuleiro({iconMatrix, setFimDeJogo, vencedor, setVencedor}){
 
     const [valoresCells, setValoresCells] = useState(Array(9).fill(''));
     const [turno, setTurno] = useState(null);
     const combosVencedores = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]]
-    const [vencedor, setVencedor] = useState(null);
 
     const verificaVitoria = () =>{
         combosVencedores.forEach(combo=>{
@@ -103,18 +103,19 @@ export function Tabuleiro({iconMatrix}){
         setValoresCells(valoresCellsUpdate);
     }
 
-    const grid = cellGenerator(valoresCells, setValoresCells, turno, setTurno, iconMatrix, atualizaTabuleiro, verificaVitoria);
+    const grid = cellGenerator(valoresCells, turno, iconMatrix, atualizaTabuleiro, verificaVitoria, vencedor);
 
     useEffect(()=>{
-        console.log("tabuleiro mudou");
-        
+        if (!valoresCells.includes('') && vencedor === null){
+            setVencedor('velha')
+        }
+
         if (turno===null){
             setTurno('user');
             return;
         }
-        
         verificaVitoria();
-        console.log('vencedor', vencedor);
+        
         if (vencedor=== null){
             if(turno==='user'){
                 setTurno('computer')
@@ -122,10 +123,16 @@ export function Tabuleiro({iconMatrix}){
                 setTurno('user')
             }
         }
+
     }, [valoresCells])
 
+    useEffect(()=>{
+        if(vencedor!=null){
+            setFimDeJogo(true);
+        }
+    }, [vencedor])
+
     useEffect(() => {
-        console.log('turno mudou')
         const jogadaDoComputador = setTimeout(async()=> {
             if (turno === 'computer' && vencedor === null) {
                 const indicesSortear = [];
@@ -142,12 +149,14 @@ export function Tabuleiro({iconMatrix}){
     }, [turno]); 
 
     return (
-        <div className="container" style={{width:'450px', height:'450px'}}>
-            {grid.map((row, rowIndex) => (
-                <div key={rowIndex} className="row d-flex">
-                    {row}
-                </div>
-            ))}
+        <div className='w-75 text-center mx-auto p-3 messageBoard' style={{backgroundColor:'#F5F0CD'}}>
+            <div className="container messageBoard rounded shadow" style={{width:'390px', height:'390px'}}>
+                {grid.map((row, rowIndex) => (
+                    <div key={rowIndex} className="row d-flex">
+                        {row}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
