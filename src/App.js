@@ -1,6 +1,7 @@
 import { Header } from './components/header';
 import { Tabuleiro } from './components/tabuleiro';
 import { PlayerSelection } from './components/playerSelection';
+import { FimDeJogo } from './components/fimDeJogo';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './App.css'
@@ -13,6 +14,7 @@ function App() {
   const [fimDeJogo, setFimDeJogo] = useState(false);
   const [userIcon, setUserIcon] = useState(null);
   const [computerIcon, setComputerIcon] = useState(null);
+  const [vencedor, setVencedor] = useState(null);
   const iconMatrix = {'user': userIcon, 'computer': computerIcon}
 
   useEffect(()=>{
@@ -29,9 +31,27 @@ function App() {
 
   return (
     <div className="App">
-      <Header computerIcon={computerIcon} userIcon={userIcon} initSelection={initSelection}/>
-      {!initSelection && <PlayerSelection setUserIcon={setUserIcon}/>}
-      {initSelection && <Tabuleiro iconMatrix={iconMatrix}/>}
+      <Header 
+        computerIcon={computerIcon} 
+        userIcon={userIcon} 
+        initSelection={initSelection}
+      />
+      {!initSelection && 
+        <PlayerSelection setUserIcon={setUserIcon}/>
+      }
+      {initSelection && 
+        <Tabuleiro 
+          iconMatrix={iconMatrix} 
+          setFimDeJogo={setFimDeJogo} 
+          vencedor={vencedor} 
+          setVencedor={setVencedor}
+        />
+      }
+      {fimDeJogo && 
+        <FimDeJogo 
+          vencedor={vencedor} 
+          setFimDeJogo={setFimDeJogo}
+        />}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function ChoiceBtn({choice, setUserIcon}){
+export function ChoiceBtn({choice, handleClick}){
     const [hover, setHover] = useState(false);
     
     const handleMouseEnter = () => setHover(true);
@@ -14,22 +14,27 @@ function ChoiceBtn({choice, setUserIcon}){
             style={{height: '50px',  aspectRatio: '1', background:hoverBackground}} 
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            onClick={(e)=>{e.preventDefault(); setUserIcon(choice)}}
+            onClick={(e)=>{e.preventDefault(); handleClick();}}
             >
-            <span className="fs-4 fw-normal bg-transparent"> {choice} </span> 
+            <span className="fw-normal bg-transparent"> {choice} </span> 
         </button>
     )
 }
 
 export function PlayerSelection({setUserIcon}){
+
+    function handleClick(choice){
+        setUserIcon(choice)
+    }
+
     return(
-        <div className="p-5 border w-75 m-auto text-center shadow-sm rounded" style={{background:'#F5F0CD'}}>
+        <div className="p-5 w-75 m-auto text-center shadow rounded messageBoard" style={{background:'#F5F0CD'}}>
             <h5 className="fw-normal bg-transparent"> 
                 Selecione o marcador que você quer usar: 
             </h5>
             <div className="mt-5 w-50 m-auto d-flex justify-content-around bg-transparent">
-                <ChoiceBtn choice={'X'} setUserIcon={setUserIcon}/>
-                <ChoiceBtn choice={'O'} setUserIcon={setUserIcon}/>
+                <ChoiceBtn choice={'X'} handleClick={()=>handleClick('X')}/>
+                <ChoiceBtn choice={'O'} handleClick={()=>handleClick('O')}/>
             </div>
         </div>
     )
