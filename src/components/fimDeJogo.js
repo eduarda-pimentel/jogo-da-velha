@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChoiceBtn } from "./playerSelection";
 
-export function FimDeJogo({vencedor, setFimDeJogo}){
+export function FimDeJogo({vencedor, setVencedor, setFimDeJogo, setInitSelection}){
 
     const userVictory =  'Parabéns! Você ganhou.';
     const computerVictory =  'Que pena! Você perdeu.';
@@ -18,7 +18,7 @@ export function FimDeJogo({vencedor, setFimDeJogo}){
                 </h5>
                 <p> Quer jogar de novo? </p>
                 <div className="mt-5 w-50 m-auto d-flex justify-content-around bg-transparent">
-                    <ChoiceBtn choice={'Sim'} handleClick={()=>{return}}/>
+                    <ChoiceBtn choice={'Sim'} handleClick={()=>{ setInitSelection(false); setFimDeJogo(false); setVencedor(null)}}/>
                     <ChoiceBtn choice={'Não'} handleClick={()=>{setFimDeJogo(false)}}/>
                 </div>
             </div>

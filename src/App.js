@@ -41,6 +41,7 @@ function App() {
       }
       {initSelection && 
         <Tabuleiro 
+          key={initSelection}
           iconMatrix={iconMatrix} 
           setFimDeJogo={setFimDeJogo} 
           vencedor={vencedor} 
@@ -51,6 +52,8 @@ function App() {
         <FimDeJogo 
           vencedor={vencedor} 
           setFimDeJogo={setFimDeJogo}
+          setInitSelection={setInitSelection}
+          setVencedor = {setVencedor}
         />}
     </div>
   );
