@@ -10,7 +10,7 @@ export function FimDeJogo({vencedor, setVencedor, setFimDeJogo, setInitSelection
 
     return(
         <div className="popUpBackground">    
-            <div className="p-5 w-50 m-auto text-center shadow-sm rounded messageBoard" style={{background:'#F5F0CD'}}>
+            <div className="p-5 m-auto text-center shadow-sm rounded messageBoard" style={{background:'#F5F0CD'}}>
                 <h5 className="fw-normal bg-transparent"> 
                     {vencedor==='user' && <> {userVictory} </>}
                     {vencedor==='computer' && <> {computerVictory} </>}
