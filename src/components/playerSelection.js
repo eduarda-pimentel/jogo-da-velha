@@ -28,7 +28,7 @@ export function PlayerSelection({setUserIcon}){
     }
 
     return(
-        <div className="p-5 w-75 m-auto text-center shadow rounded messageBoard" style={{background:'#F5F0CD'}}>
+        <div className="p-5 m-auto text-center shadow rounded messageBoard" style={{background:'#F5F0CD'}}>
             <h5 className="fw-normal bg-transparent"> 
                 Selecione o marcador que você quer usar: 
             </h5>

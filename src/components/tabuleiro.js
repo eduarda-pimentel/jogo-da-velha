@@ -31,8 +31,8 @@ function Cell({colIndex, rowIndex, nrows, valoresCells, turno, vencedor, atualiz
     return (
         <button
             key={`${rowIndex}-${colIndex}`}
-            className="col shadow d-flex align-items-center justify-content-center border-0"
-            style={{ aspectRatio: '1', background: hoverBackground }}
+            className="col d-flex align-items-center justify-content-center "
+            style={{ aspectRatio: '1', background: hoverBackground,  border: '1px solid #FADA7A'}}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={(e)=>handleClick(e)}
@@ -149,8 +149,8 @@ export function Tabuleiro({iconMatrix, setFimDeJogo, vencedor, setVencedor}){
     }, [turno]); 
 
     return (
-        <div className='w-75 text-center mx-auto p-3 messageBoard' style={{backgroundColor:'#F5F0CD'}}>
-            <div className="container messageBoard rounded shadow" style={{width:'390px', height:'390px'}}>
+        <div className='text-center mx-auto p-3 messageBoard' style={{backgroundColor:'#F5F0CD'}}>
+            <div className="tabuleiro mx-auto rounded shadow">
                 {grid.map((row, rowIndex) => (
                     <div key={rowIndex} className="row d-flex">
                         {row}

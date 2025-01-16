@@ -1,14 +1,21 @@
 *{
   max-height: 100vh;
   max-width: 100vw;
+  box-sizing: border-box;
 }
 
 body{
   background-image: url('../public/background.png');
 }
 
+.tabuleiro{
+  width: 70%; 
+/*   border: 2px solid #FADA7A; */
+}
+
 .messageBoard{
   border: 2px solid #FADA7A;
+  width: 95%;
 }
 
 .popUpBackground{
@@ -22,4 +29,14 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (min-width:769px) {
+  .messageBoard{
+    width: 75%;
+  }
+
+  .tabuleiro{
+    width: 40%;  
+  }
 }
